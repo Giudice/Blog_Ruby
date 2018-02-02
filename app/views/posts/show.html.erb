@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Titre:</strong>
+  <%= @post.titre %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @post.date %>
+</p>
+
+<p>
+  <strong>Chapeau:</strong>
+  <%= @post.chapeau %>
+</p>
+
+<p>
+  <strong>Vignette:</strong><br>
+  <%= image_tag @post.vignette.small if @post.vignette.present? %>
+</p>
+
+<p>
+  <%# On récupère l'id de l'utilisateur qui a écrit l'article pour pouvoir etre rediriger vers son profil quand on clique dessus%>
+  <% @users.each do |user| %>
+    <% if user.nom==@post.nomAuteur %>
+      <strong><%= link_to 'Auteurs:', user_path(user.id) %></strong>
+      <%= @post.nomAuteur %>
+    <% end %>
+  <% end %>
+</p>
+
+<%# Si l'utilisateur est connecté et que l'article a été écrit par lui il peux le modifier%>
+<% if user_signed_in? && current_user.nom==@post.nomAuteur %>
+  <%= button_to 'Edit', edit_post_path(@post), :method => "get" %>
+<% end %>
+
+<%= link_to 'Back', posts_path %><br><br>
+
+
+<% @commentaires.each do |commentaire| %>
+  <% if commentaire.post_id == @post.id %>
+    <strong>Commentaire de <%= commentaire.auteur %>:</strong><br>
+    <td><%= commentaire.contenu %> </td><br>
+    <strong>Posté le : </strong><%= commentaire.date %><br><br>
+    <% end %>
+<% end %> <br><br>
+
+
+<%# Formulaire ajout commentaire uniquement si l'utilisateur est connecté%>
+<% if user_signed_in? %>
+  <%= form_for Commentaire.new,:url => {:action => :create, :controller => :commentaires} do |f| %>
+  <h3>Poster un commentaire : </h3>
+    <div class="field">
+      <%= f.label :contenu %><br>
+      <%= f.text_area :contenu %>
+    </div>
+    <div style= "display : none" class="field">
+      <%= f.label :date %><br>
+      <%= f.date_select :date %>
+    </div>
+    <div style= "display : none" class="field">
+      <%= f.label :post_id %><br>
+      <%= f.number_field :post_id, :readonly => true, :value =>@post.id %>
+    </div>
+    <div style= "display : none" class="field">
+      <%= f.label :auteur %><br>
+      <%= f.text_field :auteur, :readonly => true, :value => current_user.nom %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+<% end %>

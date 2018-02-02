@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Nom:</strong>
+  <%= @user.nom %>
+</p>
+
+<p>
+  <strong>Prenom:</strong>
+  <%= @user.prenom %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Article(s) rédigé(s) par <%= @user.nom %> :</strong><br>
+    <%# On affiche tous les articles publiés par l'utilisateur et on récupère l'id de l'article coresspondant au titre pour pouvoir etre rediriger vers celui ci quand on clique dessus%>
+  <% @posts.each do |post| %>
+    <% if @user.nom==post.nomAuteur%>
+      <td><%= link_to post.titre, post_path(post.id) %></td><br>
+    <% end %>
+  <% end %>
+</p>
+
+<br><%= link_to 'Back', users_path %>

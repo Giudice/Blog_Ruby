@@ -1,0 +1,38 @@
+
+<%= form_for(@post, :html => {:multipart => true}) do |f| %>
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% @post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :titre %><br>
+    <%= f.text_field :titre %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :chapeau %><br>
+    <%= f.text_area :chapeau %>
+  </div>
+  <div class="field">
+    <%= f.label :vignette %><br>
+    <%= f.file_field :vignette %>
+  </div>
+  <div style= "display : none" class="field">
+    <%= f.label :nomAuteur %><br>
+    <%= f.text_field :nomAuteur, :readonly => true, :value => current_user.nom %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
